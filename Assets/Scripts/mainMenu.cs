@@ -1,28 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
+using System.Collections;
 public class mainMenu : MonoBehaviour
 {
-    public GameObject cube;
-    public float x;
-    public float y;
-    public float z;
+    public GameObject menubar;
+    public GameObject clickable;
+    public GameObject score;
+    public GameObject gameTitle;
+    public GameObject start_animation;
+    public Rigidbody p;
+
+    public void startGame(){
+        StartCoroutine(startAnimation());
+    }
     
-    // Start is called before the first frame update
-    void Start()
-    {
+    public void start(){
         
+        if (PlayerPrefs.GetInt("isMainMenu") != 0)
+            startGame();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        cube.transform.Rotate(x,y,z);
+    IEnumerator startAnimation(){
+        
+        start_animation.SetActive(true);
+        yield return new WaitForSeconds(0.6f);
+        menubar.SetActive(false);
+        clickable.SetActive(false);
+        gameTitle.SetActive(false);
+        score.SetActive(true);
+        player.isMainMenu = false;
+        ScoreSystem.StartScore();
+        p.position = new Vector3(0, p.position.y,p.position.z);
+        yield return new WaitForSeconds(1f);
+        start_animation.SetActive(false);
     }
-
-    public void loadScene(){
-        SceneManager.LoadScene(1);
-    }
+   
 }

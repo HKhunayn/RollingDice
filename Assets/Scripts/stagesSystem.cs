@@ -5,7 +5,7 @@ using UnityEngine;
 public class stagesSystem : MonoBehaviour
 {
     public GameObject[] stages; 
-    private float[] lengths = {22f,10f,60f,30f,45f,30f};  //real lengths = 15 5 54 24 35 20
+    private float[] lengths = {22f,10f,60f,30f,45f,30f};  //real lengths = 16 5 54 24 35 20
     public GameObject point;
     private float currentstageLocation=25f;
     // Start is called before the first frame update

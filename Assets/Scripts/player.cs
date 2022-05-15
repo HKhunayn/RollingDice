@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -22,7 +21,7 @@ public class player : MonoBehaviour
     // Start is called before the first frame update
     public Transform[] diceFaces = new Transform[6];
     private bool Isflipping = false;
-    public bool isMainMenu;
+     public static bool isMainMenu;
     public Text speedText;
     private Vector3 LastjumpLocation;
     private bool moreMoiwning=false;
@@ -31,9 +30,15 @@ public class player : MonoBehaviour
     public Rigidbody walkEffect ;
     public Rigidbody deathEffect ;
     private bool isDead = false; 
+    public GameObject death_menu;
     
+    private bool stopMoving = false;
     void Start()
     { 
+        if (PlayerPrefs.GetInt("inMainMenu") == 0)
+            isMainMenu = true;
+        else
+            isMainMenu= false;
         camhight = cam.position.y;
         xPositonDiff = Mathf.Abs(p.position.x - cam.position.x);
         //speed = startedSpeed;
@@ -66,7 +71,7 @@ public class player : MonoBehaviour
             p.AddForce(jump/2,2*jump,0,ForceMode.Impulse);
             jumpEffect.position = p.position + new Vector3(3f,-1.5f,0);
             jumpEffect.AddForce(-p.velocity.x,-p.velocity.y,0,ForceMode.Impulse);
-            remaining += 90;
+            remaining += 90f;
             StartCoroutine(flip());
             
                 
@@ -83,17 +88,19 @@ public class player : MonoBehaviour
         
         if (Isflipping && !isDead)
             p.position += new Vector3((startedSpeed+speed)/2,0,0);
-        else
+        else if (!stopMoving)
             p.position += new Vector3(speed,0,0);
         //p.AddForce(speed,0,0,ForceMode.Impulse);
-        if (!isMainMenu)
+        
+        if (!isMainMenu && !isDead)
             speed += speedFactor;
         speedText.text = "Speed: " + (Mathf.Floor(1000*speed)/100) + " m/s";
 
         if (p.velocity.y<10 && !isDoublejump || moreMoiwning){
             p.AddForce(-speed,-(speedFactor+(jump/4)),0,ForceMode.Impulse);
         }
-        cam.position = new Vector3(p.position.x - xPositonDiff,camhight,cam.position.z);
+        if (!stopMoving)
+            cam.position = new Vector3(p.position.x - xPositonDiff,camhight,cam.position.z);
         if (!clicked && !isDead){ // walkEffect
             Instantiate(walkEffect, p.position + new Vector3(-2f,-1.5f,0), Quaternion.identity);
         } 
@@ -120,7 +127,7 @@ public class player : MonoBehaviour
             //p.AddTorque(0,0,-1f);
             yield return new WaitForSeconds(0.01f);
             total++;
-            if (_speed > 5)
+            if (_speed > 5f)
                 afterMid = true;
             if (afterMid && _speed > 1+ flipSpeed/10f)
                 _speed -= flipSpeed/10;
@@ -129,7 +136,13 @@ public class player : MonoBehaviour
             remaining -= amount;
             //print("time:"+ Time.deltaTime + " , total:"+total + " , speed:"+ _speed);
         }
-        //print("time:"+ Time.deltaTime + " , total:"+total + " , speed:"+ _speed);
+        if (remaining < 0){ // to fix some rotation problems happend when double jump
+            p.transform.Rotate(new Vector3(-p.transform.rotation.x,-p.transform.rotation.y,-remaining));
+            remaining -= remaining;
+
+        }
+        
+        // p.rotation. = Quaternion.EulerAngles(p.rotation.eulerAngles.x,p.rotation.eulerAngles.y,0f);
         Isflipping=false;
         
     }
@@ -144,10 +157,7 @@ public class player : MonoBehaviour
             print("Score +1 ?");
             ScoreSystem.addScore(score,1);
         }
-        else if (other.gameObject.CompareTag("Damgable")){
-            ScoreSystem.resetScore();
-            SceneManager.LoadSceneAsync("game");            
-        }
+
         else if (other.gameObject.CompareTag("jump") && isMainMenu){
             clicked = true;
             p.AddForce(0,jump,0,ForceMode.Impulse);
@@ -198,11 +208,16 @@ public class player : MonoBehaviour
         p.GetComponent<Collider>().enabled = false;
         for(int i=0;i<diceFaces.Length;i++)
             diceFaces[i].gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
+        for(int i =0;i<10;i++){
+            yield return new WaitForSeconds(0.05f);
+            speed *= 0.95f;
+        }
         Time.timeScale =1f;
-        
-        ScoreSystem.resetScore();
-        SceneManager.LoadSceneAsync("game");
+        Text s = death_menu.transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<Text>();
+        Text bs = death_menu.transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<Text>();
+        Text ca = death_menu.transform.GetChild(1).GetChild(3).GetChild(0).GetComponent<Text>();
+        deathMenu.openDeathMenu(death_menu,s,bs,ca);
+        stopMoving =true;
     }
     
 }
