@@ -4837,8 +4837,16 @@ PrefabInstance:
       value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds
+      value: 
+      objectReference: {fileID: 3143295671661048562, guid: 4a1ee9ad81050ae4b90bc98df6f195e0, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
       propertyPath: isDoublejump
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds.Array.size
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
       propertyPath: diceFaces.Array.data[0]
@@ -4864,6 +4872,50 @@ PrefabInstance:
       propertyPath: diceFaces.Array.data[5]
       value: 
       objectReference: {fileID: 855260547}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: jumps_sounds.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 3202083019616632597, guid: 89e7171041817fa479a8772126e6f00c, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 424327849377006201, guid: 38e0f9a6796b8d346b83d709dd1632da, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 5652156480465968356, guid: 58a033602a4d0524da42ee1716387c0f, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 3321999262833639929, guid: ba8d74511294fb84eba4f926121ac695, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: death_sounds.Array.data[4]
+      value: 
+      objectReference: {fileID: 6142051312281548813, guid: b51adfcc56af2ba42a0ad47e6694259e, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: jumps_sounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 4193208590654813488, guid: fe4c8caee1a989143b6ec83029e92ece, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: jumps_sounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 4737415398097900921, guid: e47e86cf39c6f1b4486eaea67d8b2ffd, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: jumps_sounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 1373889585581873734, guid: 73ddb7b2ffabd744ea0a9fb3ec4ab99b, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: jumps_sounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 7312776345000051447, guid: 0d8c95c5d92192445a04b5cf6c2b08d4, type: 3}
+    - target: {fileID: 2109985696190830080, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
+      propertyPath: jumps_sounds.Array.data[4]
+      value: 
+      objectReference: {fileID: 581982158374783717, guid: 8b5817c2578bc6f4f8e11125647be714, type: 3}
     - target: {fileID: 2109985696190830083, guid: 5b6719abce9abfb45bee1b29bd9d8dbe, type: 3}
       propertyPath: m_RootOrder
       value: 2

@@ -31,6 +31,9 @@ public class player : MonoBehaviour
     public Rigidbody deathEffect ;
     private bool isDead = false; 
     public GameObject death_menu;
+
+    public GameObject[] jumps_sounds;
+    public GameObject[] death_sounds;
     
     private bool stopMoving = false;
     void Start()
@@ -108,7 +111,10 @@ public class player : MonoBehaviour
     
     IEnumerator flip(){
         Isflipping = true;
+        int r = Random.Range(0,jumps_sounds.Length-1);
+        GameObject s = Instantiate(jumps_sounds[r], p.position,Quaternion.identity);
         yield return new WaitForSeconds(0.1f);
+
         //Vector3 speed = new Vector3(0,0,-5);
         
         int total = 0;
@@ -136,6 +142,7 @@ public class player : MonoBehaviour
             remaining -= amount;
             //print("time:"+ Time.deltaTime + " , total:"+total + " , speed:"+ _speed);
         }
+        Destroy(s);
         if (remaining < 0){ // to fix some rotation problems happend when double jump
             p.transform.Rotate(new Vector3(-p.transform.rotation.x,-p.transform.rotation.y,-remaining));
             remaining -= remaining;
@@ -199,9 +206,14 @@ public class player : MonoBehaviour
 
     }
     IEnumerator _Death(){
-        
-        
+
+        if (PlayerPrefs.GetInt("Haptic") == 1)
+            Handheld.Vibrate();
+
+            
         Instantiate(deathEffect, p.position + new Vector3(-3f,3f,-0f), Quaternion.identity);
+        int r = Random.Range(0,death_sounds.Length-1);
+        GameObject d = Instantiate(death_sounds[r], p.position,Quaternion.identity);
         // yield return new WaitForSeconds(0.05f);
         Time.timeScale =0.5f;
         p.GetComponent<Renderer>().enabled = false;
@@ -212,6 +224,7 @@ public class player : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
             speed *= 0.95f;
         }
+        Destroy(d);
         Time.timeScale =1f;
         Text s = death_menu.transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<Text>();
         Text bs = death_menu.transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<Text>();
