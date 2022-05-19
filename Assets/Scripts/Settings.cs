@@ -10,19 +10,19 @@ public class Settings : MonoBehaviour
     public Text haptic;
     public Text fps;
     public Text sound;
+    int []ff = {20,30,60,120,144,160,200,240};
     void Start(){
-                print(" start chaning...");
-        int q = PlayerPrefs.GetInt("Quality");
+        int q = PlayerPrefs.GetInt("Quality",1);
         QualitySettings.SetQualityLevel(q);
         changeQualityto(q);
         ///
-        int h = PlayerPrefs.GetInt("Haptic");
+        int h = PlayerPrefs.GetInt("Haptic",1);
         changeHapticto(h);
         //
-        int f = PlayerPrefs.GetInt("FPS");
+        int f = PlayerPrefs.GetInt("FPS",1);
         changeFPSto(f);
         //
-        int s = PlayerPrefs.GetInt("Sound");
+        int s = PlayerPrefs.GetInt("Sound",1);
         changeSoundto(s);
         print(" All changed!");
     }
@@ -48,13 +48,19 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetInt("Quality",q);
         QualitySettings.SetQualityLevel(q);
         string []qq = {"Low","Mid","High"};
+        float []qr = {0.4f,0.6f,0.8f};
         quality.text = qq[q];
+        Screen.SetResolution((int)(qr[q]*Screen.resolutions[0].width),(int)(qr[q]*Screen.resolutions[0].height),Screen.fullScreen);
+        
     }
 
     public void changeHaptic(){
         int h = PlayerPrefs.GetInt("Haptic",1);
-        if (h == 0)
+        if (h == 0){
             h=1;
+            Settings.doHaptic();
+        }
+            
         else 
             h=0;
         changeHapticto(h);
@@ -64,20 +70,29 @@ public class Settings : MonoBehaviour
     private void changeHapticto(int h){
         PlayerPrefs.SetInt("Haptic",h);
         if (h == 0) haptic.text="Off";
-        else  haptic.text="On";
+        else 
+            haptic.text="On";
     }
 
     public void changeFPS(){
         int f = PlayerPrefs.GetInt("FPS",1)+1;
-        if (f > 2)
+        
+        int maxfps=-1;
+        for(int i =0; ff[i] <=Screen.currentResolution.refreshRate ; i++){
+            maxfps++;
+            
+        }
+        if (f > maxfps)
             f=0;
         changeFPSto(f);
     }
     private void changeFPSto(int f){
+        
         PlayerPrefs.SetInt("FPS",f);
-        int []ff = {20,30,60};
-        fps.text = ff[f]+"";
+        
+        fps.text = ff[f]+"/"+Screen.currentResolution.refreshRate;
         Application.targetFrameRate=ff[f];
+        
     }
     public void changeSound(){
         int s = PlayerPrefs.GetInt("Sound",1);
@@ -94,5 +109,12 @@ public class Settings : MonoBehaviour
         AudioListener.volume = s;
         if (s == 0) sound.text="Off";
         else  sound.text="On";
+    }
+
+    public static void doHaptic(){
+        if (PlayerPrefs.GetInt("Haptic") == 1){
+            Handheld.Vibrate();
+        }
+            
     }
 }

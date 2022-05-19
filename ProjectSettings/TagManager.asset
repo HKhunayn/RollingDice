@@ -10,11 +10,12 @@ TagManager:
   - jump
   - force_jump
   - the_end
+  - road
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - ground
   - Water
   - UI
   - 

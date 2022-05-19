@@ -107,9 +107,9 @@ GameObject:
   - component: {fileID: 3089044370397831929}
   - component: {fileID: 3089044370397831928}
   - component: {fileID: 3089044370397831935}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: tallblock
-  m_TagString: Untagged
+  m_TagString: road
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -297,9 +297,9 @@ GameObject:
   - component: {fileID: 3089044370759973257}
   - component: {fileID: 3089044370759973256}
   - component: {fileID: 3089044370759973263}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: block
-  m_TagString: Untagged
+  m_TagString: road
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295

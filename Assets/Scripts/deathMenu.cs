@@ -16,7 +16,7 @@ public class deathMenu : MonoBehaviour
         ScoreSystem.addAttempt();
         s.text = "Score: " + ScoreSystem.currentScore;
         best.text = "Best score: " + ScoreSystem.BestScore;
-        attps.text = "Current attempts: " + ScoreSystem.current_attempts;
+        attps.text = "Attempts: " + ScoreSystem.current_attempts;
         menu.SetActive(true);
     } 
     public void playAgain(){

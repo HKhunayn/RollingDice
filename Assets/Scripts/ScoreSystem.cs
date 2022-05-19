@@ -10,9 +10,9 @@ public class ScoreSystem : MonoBehaviour
     private static bool isNewScore = false;
 
     public static Text score;
-    public void start(){
-        BestScore = PlayerPrefs.GetInt("Best Score");
-        current_attempts = PlayerPrefs.GetInt("Current Attempts");
+    public void Start(){
+        BestScore = PlayerPrefs.GetInt("Best Score",0);
+        current_attempts = PlayerPrefs.GetInt("Current Attempts",0);
     }
     public static void resetScore(){
         currentScore =0;

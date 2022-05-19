@@ -15,7 +15,8 @@ public class player : MonoBehaviour
     private float camhight;
     private float xPositonDiff;
     public float flipSpeed = 2f;
-    public GameObject scripts;
+    public float whenjump = 0;
+    public float whenhit = 0;
     public bool isDoublejump = false;
     private float []perfectRot = {1,0,0.7071074f,-0.7071074f,-1}; 
     // Start is called before the first frame update
@@ -34,10 +35,12 @@ public class player : MonoBehaviour
 
     public GameObject[] jumps_sounds;
     public GameObject[] death_sounds;
+    public GameObject[] hit_sounds;
     
     private bool stopMoving = false;
     void Start()
     { 
+        // Debug.LogWarning("fixed:"+Time.fixedDeltaTime+" , delta:"+ Time.deltaTime);
         if (PlayerPrefs.GetInt("inMainMenu") == 0)
             isMainMenu = true;
         else
@@ -49,29 +52,69 @@ public class player : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.acceleration.sqrMagnitude > 5f || Input.GetKeyDown(KeyCode.Space)){ // shake it
-            //p.position = p.position + new Vector3(Random.Range(-10f,-4f),Random.Range(-10f,-4f),Random.Range(-10f,-4f));
-            //Debug.Log("before random rotating "+p.transform.localRotation);
-            //Quaternion q = p.transform.rotation;
-            int x = ((int)Random.Range(0f,4f))*90;
-            int y = ((int)Random.Range(0f,4f))*90;
-            int z = ((int)Random.Range(0f,4f))*90;
-            p.transform.Rotate(new Vector3(90,0,0));
-            //p.transform.rotation = q;
-            //Debug.Log("After random rotating "+p.transform.localRotation);
-            Handheld.Vibrate();
+        // if (Input.acceleration.sqrMagnitude > 5f || Input.GetKeyDown(KeyCode.Space)){ // shake it
+        //     //p.position = p.position + new Vector3(Random.Range(-10f,-4f),Random.Range(-10f,-4f),Random.Range(-10f,-4f));
+        //     //Debug.Log("before random rotating "+p.transform.localRotation);
+        //     //Quaternion q = p.transform.rotation;
+        //     int x = ((int)Random.Range(0f,4f))*90;
+        //     int y = ((int)Random.Range(0f,4f))*90;
+        //     int z = ((int)Random.Range(0f,4f))*90;
+        //     p.transform.Rotate(new Vector3(90,0,0));
+        //     //p.transform.rotation = q;
+        //     //Debug.Log("After random rotating "+p.transform.localRotation);
+        //     Handheld.Vibrate();
             
-        }
-        if(Input.GetKey(KeyCode.Mouse0) && !clicked && !Isflipping && !isMainMenu){
+        // }
+
+        
+        float t = Time.deltaTime * (1/Time.fixedDeltaTime);
+        // Debug.Log("detaTime: "+Time.deltaTime + "   ,fixe: "+ Time.fixedDeltaTime + "   ,t:"+ t);
+        if (Isflipping && !isDead)
+            p.position += new Vector3((startedSpeed+speed)/2*t,0,0);
+        else if (!stopMoving)
+            p.position += new Vector3(speed*t,0,0);
+        else
+            p.position = LastjumpLocation;
+        //p.AddForce(speed,0,0,ForceMode.Impulse);
+        if (!isMainMenu && !isDead)
+            speed += speedFactor*t;
+        if (!stopMoving)
+            cam.position = new Vector3((p.position.x - xPositonDiff),cam.position.y,cam.position.z);
+
+        if(Input.GetKey(KeyCode.Mouse0) && !clicked && !Isflipping && !isMainMenu && !isDead){
             clicked=true;
+            whenjump = Time.time;
+            isDoublejump = true;
+            Debug.LogWarning("jump time: "+Time.time);
+            StartCoroutine(doubleJumpDelay());
             LastjumpLocation = p.position;
             p.AddForce(0,jump,0,ForceMode.Impulse);
             remaining += 90;
             StartCoroutine(flip());
             //print("isFlipping: "+ Isflipping);
-        }else if(Input.GetKeyDown(KeyCode.Mouse0)  && !isMainMenu && !isDoublejump && LastjumpLocation.x  + 3f< p.position.x  && p.velocity.y > 10f  ){ // double jump
+
+            // Debug.Log("you can double jump now lol");
+
+        }else if(Input.GetKeyDown(KeyCode.Mouse0) && !isMainMenu && !isDoublejump && clicked && !isDead && whenjump> whenhit){ // double jump
+
+             if (Physics.Raycast(p.position + new Vector3(0,-3f,0),Vector3.down,10f,3) && p.velocity.y < -30f){
+                Debug.DrawRay(p.position + new Vector3(0,-1.5f,0),Vector3.down*1f,Color.red,200f);
+                Debug.LogError("near to the ground");
+                return;
+             }
+              Debug.LogWarning("djump time: "+Time.time);
+            // Debug.DrawRay(p.position + new Vector3(0,-1.5f,0),Vector3.down*1,Color.green,200f);
+            // Debug.Log("pos:"+ p.position + " ,rot:"+ p.rotation+" ,vel:" + p.velocity);
             isDoublejump = true;
+            p.velocity = Vector3.zero;
             p.AddForce(jump/2,2*jump,0,ForceMode.Impulse);
+            if (p.velocity.y < 10f){
+                
+                p.velocity = new Vector3(p.velocity.x,10f,0);
+                
+            }
+                
+            
             jumpEffect.position = p.position + new Vector3(3f,-1.5f,0);
             jumpEffect.AddForce(-p.velocity.x,-p.velocity.y,0,ForceMode.Impulse);
             remaining += 90f;
@@ -79,36 +122,44 @@ public class player : MonoBehaviour
             
                 
             float f = 0;
-            while(f < 1f)
-                f += Time.deltaTime;
+            f += Time.deltaTime;
             jumpEffect.velocity =new Vector3(0,0,0);
             moreMoiwning=true;
-            print ("Double jump !");
         }
             
     }
+
     private void FixedUpdate() {
-        
-        if (Isflipping && !isDead)
-            p.position += new Vector3((startedSpeed+speed)/2,0,0);
-        else if (!stopMoving)
-            p.position += new Vector3(speed,0,0);
-        //p.AddForce(speed,0,0,ForceMode.Impulse);
-        
-        if (!isMainMenu && !isDead)
-            speed += speedFactor;
+
         speedText.text = "Speed: " + (Mathf.Floor(1000*speed)/100) + " m/s";
 
-        if (p.velocity.y<10 && !isDoublejump || moreMoiwning){
+        if (p.velocity.y<10 ||  moreMoiwning){
             p.AddForce(-speed,-(speedFactor+(jump/4)),0,ForceMode.Impulse);
         }
-        if (!stopMoving)
-            cam.position = new Vector3(p.position.x - xPositonDiff,camhight,cam.position.z);
+
         if (!clicked && !isDead){ // walkEffect
             Instantiate(walkEffect, p.position + new Vector3(-2f,-1.5f,0), Quaternion.identity);
         } 
+        if (p.position.y<-10 ) // to avoid keep falling
+            Death(p.position);
+        // }else if (p.position.y - LastjumpLocation.y> 10.35f){ // to fix high jump
+        //     Debug.LogWarning("to high p.y=" + p.position.y + ", dif="+(p.position.y - LastjumpLocation.y) + " ,p.vel:"+p.velocity);
+        //     if (p.velocity.y > 0)
+        //         p.velocity= new Vector3(p.velocity.x,0,0);
+        //     p.AddForce(0,-jump,0,ForceMode.Impulse);
+
+        // }
+        // if (p.velocity.y> 50f){ // to detect high jump
+        //     Debug.LogWarning("High jump detected! -> " + p.velocity.y);
+        //     p.velocity = new Vector3(p.velocity.x,50,p.velocity.z);
+        // }
+            
     }
-    
+    IEnumerator doubleJumpDelay(){
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        isDoublejump = false;
+    }
     IEnumerator flip(){
         Isflipping = true;
         int r = Random.Range(0,jumps_sounds.Length-1);
@@ -153,15 +204,11 @@ public class player : MonoBehaviour
         Isflipping=false;
         
     }
-    private IEnumerator waitt(){
-        yield return new WaitForSeconds(0.1f);
-        
-    }
+
     public Text score;
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("+1") && !isMainMenu){
             //ScoreSystem.addScore(score,1);
-            print("Score +1 ?");
             ScoreSystem.addScore(score,1);
         }
 
@@ -174,18 +221,21 @@ public class player : MonoBehaviour
             p.position = new Vector3(0,p.position.y,0);
         }
     }
+ 
     private void OnCollisionEnter(Collision other) {
-        if(clicked){
-            //Debug.Log("hit!");
-            //StartCoroutine(waitt());
-            clicked = false;
-            isDoublejump = false;
-            moreMoiwning =false;
+        if(clicked && other.gameObject.CompareTag("road")){
+            LastjumpLocation = p.position;
+            whenhit = Time.time;
+            // Debug.Log("hit! :" + other.transform.position);
+
+            StartCoroutine(justHited());
+            Debug.LogWarning("hit time: "+Time.time);
         }
         if (other.gameObject.CompareTag("Damgable")){// death
             if (isMainMenu){
                 Debug.LogWarning("hit in mainmenu mode!");
-                Time.timeScale =0f;
+                //Time.timeScale =0f;
+                p.position = new Vector3(p.position.x+1f,p.position.y+1f,0);
             }
             
             Death(other.transform.position);
@@ -193,24 +243,34 @@ public class player : MonoBehaviour
 
 
         }
+        else{
+            int r = Random.Range(0,hit_sounds.Length-1);
+            GameObject s = Instantiate(hit_sounds[r], p.position,Quaternion.identity);
+        }
+
+    }
+    IEnumerator justHited(){
+
+            yield return new WaitForSeconds(0.001f);
+            clicked = false;
+            moreMoiwning =false;
+
 
     }
 
     private void Death(Vector3 v){
-        
+        if (isMainMenu)
+            p.position = new Vector3(0,0,0);
         if (isDead)
             return;
         isDead = true;
-        
+        Settings.doHaptic();
         StartCoroutine(_Death());
 
     }
     IEnumerator _Death(){
 
-        if (PlayerPrefs.GetInt("Haptic") == 1)
-            Handheld.Vibrate();
 
-            
         Instantiate(deathEffect, p.position + new Vector3(-3f,3f,-0f), Quaternion.identity);
         int r = Random.Range(0,death_sounds.Length-1);
         GameObject d = Instantiate(death_sounds[r], p.position,Quaternion.identity);
@@ -220,16 +280,25 @@ public class player : MonoBehaviour
         p.GetComponent<Collider>().enabled = false;
         for(int i=0;i<diceFaces.Length;i++)
             diceFaces[i].gameObject.SetActive(false);
-        for(int i =0;i<10;i++){
-            yield return new WaitForSeconds(0.05f);
+        for(int i =0;i<5;i++){
+            yield return new WaitForSecondsRealtime(0.2f);
             speed *= 0.95f;
+            LastjumpLocation = p.position;
         }
         Destroy(d);
         Time.timeScale =1f;
+        speed /= 2;
         Text s = death_menu.transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<Text>();
         Text bs = death_menu.transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<Text>();
         Text ca = death_menu.transform.GetChild(1).GetChild(3).GetChild(0).GetComponent<Text>();
         deathMenu.openDeathMenu(death_menu,s,bs,ca);
+        while(speed > 0.01f){
+            yield return new WaitForSecondsRealtime(0.2f);
+            speed *= 0.95f;
+            LastjumpLocation = p.position;
+        }
+        speed = 0f;
+        cam.velocity = Vector3.zero;
         stopMoving =true;
     }
     

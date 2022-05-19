@@ -7,6 +7,7 @@ public class mainMenu : MonoBehaviour
     public GameObject score;
     public GameObject gameTitle;
     public GameObject start_animation;
+    public GameObject tap;
     public Rigidbody p;
 
     public void startGame(){
@@ -26,6 +27,7 @@ public class mainMenu : MonoBehaviour
         menubar.SetActive(false);
         clickable.SetActive(false);
         gameTitle.SetActive(false);
+        tap.SetActive(false);
         score.SetActive(true);
         player.isMainMenu = false;
         ScoreSystem.StartScore();

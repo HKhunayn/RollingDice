@@ -6,8 +6,8 @@ PlayerSettings:
   serializedVersion: 22
   productGUID: eb3c825028e3672449b39fa3bdd44210
   AndroidProfiler: 0
-  AndroidFilterTouchesWhenObscured: 0
-  AndroidEnableSustainedPerformanceMode: 0
+  AndroidFilterTouchesWhenObscured: 1
+  AndroidEnableSustainedPerformanceMode: 1
   defaultScreenOrientation: 0
   targetDevice: 2
   useOnDemandResources: 0
@@ -255,7 +255,7 @@ PlayerSettings:
   AndroidIsGame: 1
   AndroidEnableTango: 0
   androidEnableBanner: 1
-  androidUseLowAccuracyLocation: 0
+  androidUseLowAccuracyLocation: 1
   androidUseCustomKeystore: 0
   m_AndroidBanners:
   - width: 320
@@ -272,7 +272,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 32304867dfdd7d3418f771eb3e586a10, type: 3}
+      m_Icon: {fileID: 2800000, guid: bafab97e5a39a404caa7e8cee27bc8c4, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0

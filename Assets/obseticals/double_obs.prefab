@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 8233773330025727915}
   - component: {fileID: 8233773330025727956}
   - component: {fileID: 8233773330025727957}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: obsticale (3)
   m_TagString: Damgable
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 8233773330616255853}
   - component: {fileID: 8233773330616255854}
   - component: {fileID: 8233773330616255855}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: obsticale (2)
   m_TagString: Damgable
   m_Icon: {fileID: 0}
