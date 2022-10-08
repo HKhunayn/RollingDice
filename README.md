@@ -6,3 +6,5 @@ this is a mini project for GameDev cource made with Unity, which is a 2.5D arcad
 ![2](https://user-images.githubusercontent.com/102166198/194719100-0806f6d7-8570-4a8c-a929-c81033434e7e.png)
 ![4](https://user-images.githubusercontent.com/102166198/194719097-8c4f0c71-94b1-4752-b554-6427b9448db4.png)
 
+# Download
+[click here](https://github.com/HKunayn/RollingDice/releases)
